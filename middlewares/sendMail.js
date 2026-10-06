@@ -13,7 +13,7 @@ const sendMail = async (email, subject, data) => {
   `;
 
   const { data: result, error } = await resend.emails.send({
-    from: 'FitForward <onboarding@resend.dev>',
+    from: 'FitForward <support@fitforward.shop>',
     to: [email],
     subject,
     html,
@@ -44,7 +44,7 @@ export const sendForgotMail = async (subject, data) => {
   `;
 
   const { data: result, error } = await resend.emails.send({
-    from: 'FitForward <onboarding@resend.dev>',
+    from: 'FitForward <support@fitforward.shop>',
     to: [data.email],
     subject,
     html,
