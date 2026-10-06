@@ -1,6 +1,6 @@
-import sgMail from '@sendgrid/mail';
+import { Resend } from 'resend';
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // ================= OTP MAIL =================
 const sendMail = async (email, subject, data) => {
@@ -12,14 +12,19 @@ const sendMail = async (email, subject, data) => {
   </div>
   `;
 
-  const msg = {
-    to: email,
-    from: process.env.EMAIL_FROM,
+  const { data: result, error } = await resend.emails.send({
+    from: 'FitForward <onboarding@resend.dev>',
+    to: [email],
     subject,
     html,
-  };
+  });
 
-  await sgMail.send(msg);
+  if (error) {
+    console.error('Resend OTP error:', error);
+    throw new Error(error.message);
+  }
+
+  return result;
 };
 
 export default sendMail;
@@ -38,12 +43,17 @@ export const sendForgotMail = async (subject, data) => {
   </div>
   `;
 
-  const msg = {
-    to: data.email,
-    from: process.env.EMAIL_FROM,
+  const { data: result, error } = await resend.emails.send({
+    from: 'FitForward <onboarding@resend.dev>',
+    to: [data.email],
     subject,
     html,
-  };
+  });
 
-  await sgMail.send(msg);
+  if (error) {
+    console.error('Resend forgot-password error:', error);
+    throw new Error(error.message);
+  }
+
+  return result;
 };
